@@ -2,7 +2,6 @@ import pygame
 import random
 import math
 from pygame import mixer
-import time
 
 pygame.init()
 
@@ -66,15 +65,14 @@ def show_score(x, y):
     screen.blit(score, (x, y))
 
 def win():
-    win_text = over_font.render("Você Ganhou",True,(255,255,255))
+    win_text = over_font.render("Você Ganhou", True, (255, 255, 255))
     screen.blit(win_text, (200, 250))
     mixer.music.stop()
-    time.sleep(1) #DEIXO ISSO OU N?
     win_music = mixer.Sound('win.wav')
-    win_music.play(loops=0)
+    win_music.play()
 
 def game_over_text():
-    over_text = over_font.render("GAME OVER",True,(255,255,255))
+    over_text = over_font.render("GAME OVER", True, (255, 255, 255))
     screen.blit(over_text, (200, 250))
     mixer.music.stop()
 
@@ -107,7 +105,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
+        
+           
+        
         #if keystroke is press check wheather its right or left
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
@@ -142,8 +142,8 @@ while running:
                 enemyY[j] = 2000
             game_over_text()
             break
-
-        if score_value == 460:
+        #win
+        if score_value == 2000:
             enemyY[i] = -2000
             win()
             break
@@ -156,9 +156,11 @@ while running:
         elif enemyX[i] >= 736:
             enemyX_change[i] = -3
             enemyY[i] += enemyY_change[i]
-            
+        if enemyY[i] >= 300:
+            enemyX[i] += enemyX_change[i]
+
     #Collision
-        collision = isCollision(enemyX[i],enemyY[i],bulletX,bulletY)
+        collision = isCollision(enemyX[i], enemyY[i], bulletX, bulletY)
         if collision: #um if sem a condicao no caso da a logica de fazer algo caso a colisao tenha acontecido
             explosion_sound = mixer.Sound('explosion.wav')
             explosion_sound.play()
@@ -170,7 +172,7 @@ while running:
         enemy(enemyX[i], enemyY[i], i)
 
     #movimento da bala
-    if bulletY <=0:
+    if bulletY <= 0:
         bulletY = 480
         bullet_state = "ready"
 
